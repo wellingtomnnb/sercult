@@ -158,3 +158,12 @@ lint/tmp/
 /ios/Runner.xcworkspace/xcshareddata/WorkspaceSettings.xcsettings
 /android/app/build.gradle
 /android/build.gradle
+/.dart_tool/flutter_build/c489252af1eb8793d1d726a230e14e7a/.filecache
+/.dart_tool/flutter_build/c489252af1eb8793d1d726a230e14e7a/app.dill
+/.dart_tool/flutter_build/c489252af1eb8793d1d726a230e14e7a/debug_android_application.stamp
+/.dart_tool/flutter_build/c489252af1eb8793d1d726a230e14e7a/flutter_assets.d
+/.dart_tool/flutter_build/c489252af1eb8793d1d726a230e14e7a/gen_dart_plugin_registrant.stamp
+/.dart_tool/flutter_build/c489252af1eb8793d1d726a230e14e7a/gen_localizations.stamp
+/.dart_tool/flutter_build/c489252af1eb8793d1d726a230e14e7a/kernel_snapshot.d
+/.dart_tool/flutter_build/c489252af1eb8793d1d726a230e14e7a/kernel_snapshot.stamp
+/.dart_tool/flutter_build/c489252af1eb8793d1d726a230e14e7a/outputs.json
