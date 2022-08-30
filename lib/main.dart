@@ -23,7 +23,7 @@ class _HomeState extends State<Home> {
 
   /* --- PROPERTIES --- */
   final Color primaryColor = Colors.pink.shade400;
-  final Color mediumGray = const Color(0XFFEFEDED);
+  final Color backgroundColor = Colors.grey.shade100;
 
   // Tabs Buttons
   final List<Tab> _tabs = [
@@ -116,7 +116,7 @@ class _HomeState extends State<Home> {
                             child: InkWell(onTap: (){},
                               child: IconButton(
                                   splashRadius: 20,
-                                  color: Colors.grey,
+                                  color: primaryColor,
                                   icon: const Icon(Icons.search, size: 17),
                                   tooltip: 'Pesquisar',
                                   onPressed: () {}
@@ -130,7 +130,7 @@ class _HomeState extends State<Home> {
                             child: InkWell(onTap: (){},
                               child:IconButton(
                                   splashRadius: 20,
-                                  color: Colors.grey,
+                                  color: primaryColor,
                                   icon: searchController.text.isEmpty ? Container() : const Icon(Icons.close, size: 17),
                                   tooltip: 'Limpar',
                                   onPressed: () => searchController.clear()
@@ -157,27 +157,27 @@ class _HomeState extends State<Home> {
       var bannerUrl2 = 'https://www.instagram.com/p/CeEOexNL3hq/media/?size=l';
       var bannerUrl3 = 'https://www.instagram.com/p/Ceob-TErTeZ/media/?size=l';
 
-      banners() => [bannerUrl, bannerUrl2, bannerUrl3];
+      final banners = [bannerUrl, bannerUrl2, bannerUrl3];
       final pages = List.generate(
-        banners().length, (index) => Container(
-        padding: const EdgeInsets.only(left: 2, right: 2),
-        child: CachedNetworkImage(
-          imageUrl: banners()[index],
-          imageBuilder: (context, imageProvider) => Container(
-            decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(5),
-                image: DecorationImage(image: imageProvider, fit: BoxFit.cover)),
+        banners.length, (index) => Container(
+          padding: const EdgeInsets.only(left: 2, right: 2),
+          child: CachedNetworkImage(
+            imageUrl: banners[index],
+            imageBuilder: (context, imageProvider) => Container(
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(5),
+                  image: DecorationImage(image: imageProvider, fit: BoxFit.cover)),
+            ),
+            placeholder: (context, url) => const Center(child: CircularProgressIndicator()),
+            errorWidget: (context, url, error) => const Icon(Icons.error),
           ),
-          placeholder: (context, url) => const Center(child: CircularProgressIndicator()),
-          errorWidget: (context, url, error) => const Icon(Icons.error),
         ),
-      ),
       );
 
       return Container(
         padding: const EdgeInsets.only(top: 5, bottom: 5),
         alignment: Alignment.centerLeft,
-        color: mediumGray,
+        color: backgroundColor,
         width: sizeWidth,
         child: Stack(
           children: [
@@ -200,7 +200,7 @@ class _HomeState extends State<Home> {
                 controller: controller,
                 count: pages.length,
                 effect: JumpingDotEffect(
-                  dotColor: mediumGray,
+                  dotColor: backgroundColor,
                   activeDotColor: primaryColor,
                   dotHeight: 8,
                   dotWidth: 8,
@@ -217,123 +217,300 @@ class _HomeState extends State<Home> {
 
     // rewardsContainer
     Widget rewardsContainer(){
+
+      const custonLeftBorderRadius = BorderRadius.only(
+        topLeft: Radius.circular(50),
+        bottomLeft: Radius.circular(50),
+      );
+
+      const custonRightBorderRadius = BorderRadius.only(
+        topRight: Radius.circular(50),
+        bottomRight: Radius.circular(50),
+      );
+
       return Container(
         padding: const EdgeInsets.all(5),
-        color: mediumGray,
+        color: backgroundColor,
         child: Row(
           children: [
             // coins
             Expanded(
-              child: Container(
-                width: sizeWidth,
-                height: 70,
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  border: Border.all(width: 1, color: mediumGray),
-                  boxShadow: [BoxShadow(blurRadius: 3,color: Colors.grey.shade400, offset: const Offset(-.3, 2))],
-                  borderRadius: const BorderRadius.only(
-                    topLeft: Radius.circular(50),
-                    bottomLeft: Radius.circular(50),
-                  ),
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Container(
-                      padding: const EdgeInsets.all(15),
-                      child: Row(
-                        children: [
-                          // icon attach_money
-                          Container(
-                            padding: const EdgeInsets.all(2),
-                            decoration: const BoxDecoration(
-                                color: Colors.orange,
-                                borderRadius: BorderRadius.all(Radius.circular(50))
-                            ),
-                            child: const Icon(Icons.attach_money, color:  Colors.white),
-                          ),
-                          // texts legend
-                          const SizedBox(width:10),
-                          Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: const [
-                              Text('Minhas', style: TextStyle(color: Colors.black54),),
-                              Text('Moedas', style: TextStyle(color: Colors.black54))
-                            ]
-                          ),
-                        ],
+              child: Material(
+                color: backgroundColor,
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 5, top: 5, bottom: 5),
+                  child: InkWell(
+                    borderRadius: custonLeftBorderRadius,
+                    onTap: (){},
+                    child: Ink(
+                      height: 70,
+                      decoration: const BoxDecoration(
+                        color: Colors.white,
+                        boxShadow: [ BoxShadow(blurRadius: .1,color: Colors.grey, offset: Offset(0,0)) ],
+                        borderRadius: custonLeftBorderRadius,
                       ),
-                    ),
-                    // text valor
-                    Text('180',
-                      style: TextStyle(
-                        fontSize: 25,
-                        fontWeight: FontWeight.bold,
-                        color: primaryColor
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Container(
+                            padding: const EdgeInsets.all(15),
+                            child: Row(
+                              children: [
+                                // icon attach_money
+                                Container(
+                                  padding: const EdgeInsets.all(2),
+                                  decoration: const BoxDecoration(
+                                      color: Colors.orange,
+                                      borderRadius: BorderRadius.all(Radius.circular(50))
+                                  ),
+                                  child: const Icon(Icons.attach_money, color:  Colors.white),
+                                ),
+                                // texts legend
+                                const SizedBox(width:10),
+                                Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: const [
+                                      Text('Minhas', style: TextStyle(color: Colors.black54),),
+                                      Text('Moedas', style: TextStyle(color: Colors.black54))
+                                    ]
+                                ),
+                              ],
+                            ),
+                          ),
+                          // text valor
+                          Text('180',
+                              style: TextStyle(
+                                  fontSize: 25,
+                                  fontWeight: FontWeight.bold,
+                                  color: primaryColor
+                              )
+                          ),
+                          const SizedBox(width:5),
+                        ],
                       )
                     ),
-                    const SizedBox(width:5),
-                  ],
-                )
+                  ),
+                ),
               )
             ),
-            const SizedBox(width: 5),
+            const SizedBox(width: 1),
             // trophy
             Expanded(
-              child: Container(
-                width: sizeWidth,
-                height: 70,
-                decoration: BoxDecoration(
-                    color: Colors.white,
-                    border: Border.all(width: 1, color: mediumGray),
-                    boxShadow: [BoxShadow(blurRadius: 3,color: Colors.grey.shade400, offset: const Offset(.3, 2))],
-                    borderRadius: const BorderRadius.only(
-                      topRight: Radius.circular(50),
-                      bottomRight: Radius.circular(50),
+              child: Material(
+                color: backgroundColor,
+                child: Padding(
+                  padding: const EdgeInsets.only(right: 5, top: 5, bottom: 5),
+                  child: InkWell(
+                    onTap: (){},
+                    borderRadius: custonRightBorderRadius,
+                    child: Ink(
+                      height: 70,
+                      decoration: const BoxDecoration(
+                        color: Colors.white,
+                        boxShadow: [ BoxShadow(blurRadius: .1,color: Colors.grey, offset: Offset(0,0)) ],
+                        borderRadius: custonRightBorderRadius,
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Container(
+                            padding: const EdgeInsets.all(15),
+                            child: Row(
+                              children: [
+                                // icon trophy
+                                Container(
+                                  padding: const EdgeInsets.all(2),
+                                  decoration: const BoxDecoration(
+                                      color: Colors.orange,
+                                      borderRadius: BorderRadius.all(Radius.circular(50))
+                                  ),
+                                  child: const Icon(Icons.emoji_events_outlined, color:  Colors.white),
+                                ),
+                                // texts legend
+                                const SizedBox(width:10),
+                                Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: const [
+                                      Text('Meu', style: TextStyle(color: Colors.black54),),
+                                      Text('Rank', style: TextStyle(color: Colors.black54))
+                                    ]
+                                ),
+                              ],
+                            ),
+                          ),
+                          // text valor
+                          Text('1880ª',
+                              style: TextStyle(
+                                  fontSize: 25,
+                                  fontWeight: FontWeight.bold,
+                                  color: primaryColor
+                              )
+                          ),
+                          const SizedBox(width:5),
+                        ],
+                      )
+                    )
+                  ),
+                ),
+              )
+            )
+          ],
+        ),
+      );
+    }
+
+    // cardEvent
+    Widget cardEvent(Map event){
+
+      return Card(
+        elevation: 0,
+        clipBehavior: Clip.antiAlias,
+        color: backgroundColor,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // banner do evento
+            Stack(children: [
+              // imagem
+              Container(
+                padding: const EdgeInsets.only(left: 10),
+                height: sizeHeight * .20,
+                width: sizeWidth * .85,
+                child: CachedNetworkImage(
+                  imageUrl: event['banner_url'],
+                  imageBuilder: (context, imageProvider) => Container(
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(5),
+                        image: DecorationImage(image: imageProvider, fit: BoxFit.cover)),
+                  ),
+                  placeholder: (context, url) => const Center(child: CircularProgressIndicator()),
+                  errorWidget: (context, url, error) => const Icon(Icons.error),
+                ),
+              ),
+              // container verde flutuante
+              Padding(
+                padding: const EdgeInsets.only(top:  10),
+                child: Container(
+                  width: sizeWidth * .45,
+                  height: sizeHeight * .04,
+                  decoration: const BoxDecoration(
+                    color: Colors.green,
+                    borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(7),
+                        bottomLeft: Radius.circular(7)
                     ),
                   ),
-                child: Row(
+                  child: Center(
+                    child: Text(event['label'],
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontSize: sizeHeight * .020)
+                    ),
+                  ),
+                )
+              ),
+            ]),
+            // titulo e horário
+            Container(
+              padding: const EdgeInsets.only(left: 5),
+              child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Container(
-                      padding: const EdgeInsets.all(15),
-                      child: Row(
-                        children: [
-                          // icon trophy
-                          Container(
-                            padding: const EdgeInsets.all(2),
-                            decoration: const BoxDecoration(
-                                color: Colors.orange,
-                                borderRadius: BorderRadius.all(Radius.circular(50))
-                            ),
-                            child: const Icon(Icons.emoji_events_outlined, color:  Colors.white),
-                          ),
-                          // texts legend
-                          const SizedBox(width:10),
-                          Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: const [
-                                Text('Meu', style: TextStyle(color: Colors.black54),),
-                                Text('Rank', style: TextStyle(color: Colors.black54))
-                              ]
-                          ),
-                        ],
-                      ),
-                    ),
-                    // text valor
-                    Text('1880ª',
+                    Text(event['title'],
                         style: TextStyle(
-                            fontSize: 25,
+                            fontSize: sizeHeight * .02,
                             fontWeight: FontWeight.bold,
-                            color: primaryColor
+                            color: Colors.blueGrey
                         )
                     ),
-                    const SizedBox(width:5),
-                  ],
-                )
-              )
+                    Text(event['time'], style: const TextStyle( color: Colors.blueGrey)),
+                  ]
+              ),
+            ),
+            // localização
+            Container(
+              padding: const EdgeInsets.only(left: 10),
+              child: const Text('Serra - Sede',
+                  textAlign: TextAlign.end,
+                  style: TextStyle(color: Colors.blueGrey)
+              ),
+            )
+          ],
+        ),
+      );
+    }
+
+    // eventsContainer
+    Widget eventsContainer(){
+
+      final controller = PageController(viewportFraction: 0.8, keepPage: true);
+      var events = [
+        {
+          'title':'Festa de São Benedito',
+          'label': '1,0 KM. Hoje. GRATIS',
+          'time': '17:30',
+          'location': 'Serra - Sede',
+          'banner_url': 'https://www.instagram.com/p/Cezn0rWNu9Z/media/?size=l'
+        },
+        {
+          'title':' Show Gustavo Lima',
+          'label': '7,9 KM. Hoje. GRATIS',
+          'time': '20:30',
+          'location': 'Laranjeiras - ES',
+          'banner_url': 'https://www.instagram.com/p/CeEOexNL3hq/media/?size=l'
+        },
+        {
+          'title':' Aula de Dança',
+          'label': '200 M. Hoje. GRATIS',
+          'time': '16:30',
+          'location': 'Jacaraípe - ES',
+          'banner_url': 'https://www.instagram.com/p/Ceob-TErTeZ/media/?size=l'
+        },
+      ];
+
+      final pages = List.generate(
+        events.length, (index) => cardEvent(events[index]),
+      );
+
+      return Container(
+        color: backgroundColor,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // main header
+            Padding(
+              padding: const EdgeInsets.only(left: 10, right: 10),
+              child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text('Eventos em Destaque',
+                    style: TextStyle(
+                      fontSize: sizeHeight * .028,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.blueGrey
+                    )
+                  ),
+                  Text('ver mais',
+                    style: TextStyle(
+                      fontSize: sizeHeight * .02,
+                      color: primaryColor
+                    )
+                  ),
+                ],
+              ),
+            ),
+            // eventos
+            SingleChildScrollView(
+              child: SizedBox(
+                  height: sizeHeight * .3,
+                  child: PageView.builder(
+                    controller: controller,
+                    itemBuilder: (_, index) {
+                      return pages[index % pages.length];
+                    },
+                  )
+              ),
             )
           ],
         ),
@@ -347,9 +524,9 @@ class _HomeState extends State<Home> {
               children: [
                 bannersCarrosel(context, sizeWidth, sizeHeight * 0.23),
                 rewardsContainer(),
-                bannersCarrosel(context, sizeWidth, sizeHeight * 0.23),
-                bannersCarrosel(context, sizeWidth, sizeHeight * 0.23),
-                bannersCarrosel(context, sizeWidth, sizeHeight * 0.23),
+                eventsContainer(),
+                eventsContainer(),
+                eventsContainer(),
               ]
           )
       ),
@@ -360,7 +537,7 @@ class _HomeState extends State<Home> {
   InputBorder customedOutlineInputBorder() {
     return OutlineInputBorder(
       borderRadius: BorderRadius.circular(20),
-      borderSide: BorderSide(color: Colors.grey)
+      borderSide: BorderSide(color: primaryColor)
     );
   }
 }
