@@ -27,11 +27,11 @@ class _HomeState extends State<Home> {
 
   // Tabs Buttons
   final List<Tab> _tabs = [
-    const Tab(icon: Icon(Icons.home)),
-    const Tab(icon: Icon(Icons.map)),
-    const Tab(icon: Icon(Icons.favorite)),
-    const Tab(icon: Icon(Icons.notifications)),
-    const Tab(icon: Icon(Icons.person)),
+    const Tab(icon: Icon(Icons.home), child: Text('Início', style: TextStyle(fontSize: 8))),
+    const Tab(icon: Icon(Icons.map), child: Text('Explorar', style: TextStyle(fontSize: 8)),),
+    const Tab(icon: Icon(Icons.favorite), child: Text('Favoritos', style: TextStyle(fontSize: 8)),),
+    const Tab(icon: Icon(Icons.notifications), child: Text('Notificações', style: TextStyle(fontSize: 8)),),
+    const Tab(icon: Icon(Icons.person), child: Text('Perfil', style: TextStyle(fontSize: 8)),),
   ];
 
   /* --- BUILDER --- */
@@ -53,11 +53,19 @@ class _HomeState extends State<Home> {
         child: Scaffold(
           appBar: topBar(),
           body: TabBarView(children: _views,physics: const BouncingScrollPhysics()),
-          bottomNavigationBar: TabBar(
-            labelColor: primaryColor,
-            unselectedLabelColor: Colors.black54,
-            indicatorColor: primaryColor,
-            tabs: _tabs
+          bottomNavigationBar: Container(
+            height: MediaQuery.of(context).size.height * .07,
+            width: MediaQuery.of(context).size.width,
+            decoration: const BoxDecoration(
+              color: Colors.white,
+              boxShadow: [ BoxShadow(blurRadius: 1, color: Colors.black45, offset: Offset(0,-.01)) ],
+            ),
+            child: TabBar(
+                labelColor: primaryColor,
+                unselectedLabelColor: Colors.black54,
+                indicatorColor: primaryColor,
+                tabs: _tabs
+            ),
           )
         ),
       )
@@ -150,9 +158,33 @@ class _HomeState extends State<Home> {
     double sizeWidth = MediaQuery.of(context).size.width;
     double sizeHeight = MediaQuery.of(context).size.height;
 
+    var events = [
+      {
+        'title':'Festa de São Benedito',
+        'label': '1,0 KM. Hoje. GRATIS',
+        'time': '17:30',
+        'location': 'Serra - Sede',
+        'banner_url': 'https://www.instagram.com/p/Cezn0rWNu9Z/media/?size=l'
+      },
+      {
+        'title':' Show Gustavo Lima',
+        'label': '7,9 KM. Hoje. GRATIS',
+        'time': '20:30',
+        'location': 'Laranjeiras - ES',
+        'banner_url': 'https://www.instagram.com/p/CeEOexNL3hq/media/?size=l'
+      },
+      {
+        'title':' Aula de Dança',
+        'label': '200 M. Hoje. GRATIS',
+        'time': '16:30',
+        'location': 'Jacaraípe - ES',
+        'banner_url': 'https://www.instagram.com/p/Ceob-TErTeZ/media/?size=l'
+      },
+    ];
+
     // bannersCarrosel
     Widget bannersCarrosel(context, sizeWidth, sizeHeight){
-      final controller = PageController(viewportFraction: 0.95, keepPage: true);
+      final controller = PageController(viewportFraction: 0.95, keepPage: true, initialPage: 1);
       var bannerUrl = 'https://www.instagram.com/p/Cezn0rWNu9Z/media/?size=l';
       var bannerUrl2 = 'https://www.instagram.com/p/CeEOexNL3hq/media/?size=l';
       var bannerUrl3 = 'https://www.instagram.com/p/Ceob-TErTeZ/media/?size=l';
@@ -362,7 +394,7 @@ class _HomeState extends State<Home> {
     }
 
     // cardEvent
-    Widget cardEvent(Map event){
+    Widget cardEvent(Map event, bool isSubEvent){
 
       return Card(
         elevation: 0,
@@ -377,7 +409,6 @@ class _HomeState extends State<Home> {
               Container(
                 padding: const EdgeInsets.only(left: 10),
                 height: sizeHeight * .20,
-                width: sizeWidth * .85,
                 child: CachedNetworkImage(
                   imageUrl: event['banner_url'],
                   imageBuilder: (context, imageProvider) => Container(
@@ -411,6 +442,20 @@ class _HomeState extends State<Home> {
                   ),
                 )
               ),
+              //avaliação e botões de favoritar e compartilhar
+              Container(
+                color: Colors.white,
+                child: Row(
+                  children: const[
+                    Icon(Icons.star, color: Colors.amber),
+                    Icon(Icons.star, color: Colors.amber),
+                    Icon(Icons.star, color: Colors.amber),
+                    Icon(Icons.star, color: Colors.amber),
+                    Icon(Icons.star_border_outlined, color: Colors.amber),
+                  ],
+                )
+              )
+
             ]),
             // titulo e horário
             Container(
@@ -443,35 +488,12 @@ class _HomeState extends State<Home> {
     }
 
     // eventsContainer
-    Widget eventsContainer(){
+    Widget eventsContainer(List<Map> events, bool isSubEvent, String categoryName){
 
-      final controller = PageController(viewportFraction: 0.8, keepPage: true);
-      var events = [
-        {
-          'title':'Festa de São Benedito',
-          'label': '1,0 KM. Hoje. GRATIS',
-          'time': '17:30',
-          'location': 'Serra - Sede',
-          'banner_url': 'https://www.instagram.com/p/Cezn0rWNu9Z/media/?size=l'
-        },
-        {
-          'title':' Show Gustavo Lima',
-          'label': '7,9 KM. Hoje. GRATIS',
-          'time': '20:30',
-          'location': 'Laranjeiras - ES',
-          'banner_url': 'https://www.instagram.com/p/CeEOexNL3hq/media/?size=l'
-        },
-        {
-          'title':' Aula de Dança',
-          'label': '200 M. Hoje. GRATIS',
-          'time': '16:30',
-          'location': 'Jacaraípe - ES',
-          'banner_url': 'https://www.instagram.com/p/Ceob-TErTeZ/media/?size=l'
-        },
-      ];
+      final controller = PageController(viewportFraction: (isSubEvent ? 0.6 : 0.8), keepPage: true, initialPage: 1);
 
       final pages = List.generate(
-        events.length, (index) => cardEvent(events[index]),
+        events.length, (index) => cardEvent(events[index], isSubEvent),
       );
 
       return Container(
@@ -481,12 +503,12 @@ class _HomeState extends State<Home> {
           children: [
             // main header
             Padding(
-              padding: const EdgeInsets.only(left: 10, right: 10),
+              padding: const EdgeInsets.only(left: 10, right: 10, bottom: 5),
               child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text('Eventos em Destaque',
+                  Text(categoryName,
                     style: TextStyle(
-                      fontSize: sizeHeight * .028,
+                      fontSize: sizeHeight * (isSubEvent? .024 : .028),
                       fontWeight: FontWeight.w600,
                       color: Colors.blueGrey
                     )
@@ -503,7 +525,7 @@ class _HomeState extends State<Home> {
             // eventos
             SingleChildScrollView(
               child: SizedBox(
-                  height: sizeHeight * .3,
+                  height: sizeHeight * .28,
                   child: PageView.builder(
                     controller: controller,
                     itemBuilder: (_, index) {
@@ -524,9 +546,10 @@ class _HomeState extends State<Home> {
               children: [
                 bannersCarrosel(context, sizeWidth, sizeHeight * 0.23),
                 rewardsContainer(),
-                eventsContainer(),
-                eventsContainer(),
-                eventsContainer(),
+                eventsContainer(events, false, 'Eventos em Destaque'),
+                eventsContainer(events, true, 'Eventos Gratuitos'),
+                eventsContainer(events, true, 'Feiras e Festivais'),
+                eventsContainer(events, true, 'Shows e Música'),
               ]
           )
       ),
