@@ -5,7 +5,7 @@ import 'package:sercult/utils.dart';
 
 import '../app_config.dart';
 
-Widget ExplorarFragment(BuildContext context,Function refresh, mapController){
+Widget ExplorarFragment(BuildContext context, Function refresh, mapController){
 
   LatLng initialCameraPosition = const LatLng(-20.1365756,-40.4441645);
 
@@ -34,7 +34,102 @@ Widget ExplorarFragment(BuildContext context,Function refresh, mapController){
 
   final double widthSize = MediaQuery.of(context).size.width;
   final double heightSize = MediaQuery.of(context).size.height;
-  final List<Widget> eventContainer = List.generate(3, (i) => Container(
+  final List<Widget> eventsContainers = List.generate(3, (i) => _eventContainer(eventsModel[i], widthSize, heightSize, refresh));
+
+  return Expanded(
+    child: Stack(
+      children: [
+        GoogleMap( //Map widget from google_maps_flutter package
+          myLocationEnabled: true,
+          myLocationButtonEnabled: true,
+          zoomGesturesEnabled: true, //enable Zoom in, out on map
+          markers: markers, //markers to show on map
+          mapType: MapType.normal, //map type
+          initialCameraPosition: CameraPosition( //initial position in map
+            target: initialCameraPosition, //initial position
+            zoom: 10.0, //initial zoom level
+          ),
+          onMapCreated: (controller) { //method called when map is created
+            mapController = controller;
+            refresh();
+          },
+        ),
+        Column(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            _rowBottons(),
+            _cardsEvent(heightSize, eventsModel, eventsContainers)
+          ],
+        )
+      ],
+    ),
+  );
+}
+
+Widget _rowBottons(){
+  //conteiners [ver lista, filtros]
+  return Row(
+    children: [
+      //mini container ver lista
+      const SizedBox(width: 10),
+      Material(
+        elevation: 0,
+        color: Colors.white.withOpacity(0),
+        child: InkWell(
+          borderRadius: const BorderRadius.all(Radius.circular(5)),
+          onTap: (){},
+          child: Ink(
+            height: 40, width: 110,
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(5),
+              boxShadow: const [ BoxShadow(blurRadius: 0.5, color: Colors.black54, offset: Offset(.2,1)) ],
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: const [
+                Text("Ver Lista"),
+                Icon(Icons.list)
+              ],
+            ),
+          ),
+        ),
+      ),
+      //mini container filtros
+      const SizedBox(width: 10),
+      Container(
+        height: 40, width: 110,
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(5),
+          boxShadow: const [ BoxShadow(blurRadius: 0.5, color: Colors.black54, offset: Offset(.2,1)) ],
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: const [
+            Text("Filtros"),
+            Icon(Icons.tune)
+          ],
+        ),
+      ),
+    ],
+  );
+}
+
+Widget _cardsEvent(heightSize, eventsModel, eventContainer){
+  //lista de eventos
+  return SizedBox(
+      height: heightSize * .18,
+      child: ListView.builder(
+        scrollDirection: Axis.horizontal,
+        itemCount: eventsModel.length,
+        itemBuilder: (context, i) => eventContainer[i],
+      )
+  );
+}
+
+Widget _eventContainer(event, widthSize, heightSize, refresh){
+  return Container(
       padding: const EdgeInsets.only(top: 10, left: 10, bottom: 5),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(5),
@@ -52,7 +147,7 @@ Widget ExplorarFragment(BuildContext context,Function refresh, mapController){
             //imagem
             CachedNetworkImage(
               width: widthSize * .3, height: heightSize * .15,
-              imageUrl: eventsModel[i]['banner_url'],
+              imageUrl: event['banner_url'],
               imageBuilder: (context, imageProvider) => Container(
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(5),
@@ -70,28 +165,28 @@ Widget ExplorarFragment(BuildContext context,Function refresh, mapController){
               children: [
                 //distancia
                 Container(
-                  padding: const EdgeInsets.all(7),
-                  decoration: BoxDecoration(
-                    color: Colors.green,
-                    borderRadius: BorderRadius.circular(5),
-                  ),
-                  child: Text(eventsModel[i]['label'], style: const TextStyle(color: Colors.white))
+                    padding: const EdgeInsets.all(7),
+                    decoration: BoxDecoration(
+                      color: Colors.green,
+                      borderRadius: BorderRadius.circular(5),
+                    ),
+                    child: Text(event['label'], style: const TextStyle(color: Colors.white))
                 ),
                 //title & location
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      eventsModel[i]['title'],
-                      style: TextStyle(
-                        fontSize: heightSize * .02,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.blueGrey
-                      )
+                        event['title'],
+                        style: TextStyle(
+                            fontSize: heightSize * .02,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.blueGrey
+                        )
                     ),
                     Text(
-                      eventsModel[i]['location'],
-                      style: const TextStyle( color: Colors.blueGrey)
+                        event['location'],
+                        style: const TextStyle( color: Colors.blueGrey)
                     ),
                   ],
                 ),
@@ -102,11 +197,11 @@ Widget ExplorarFragment(BuildContext context,Function refresh, mapController){
                     //stars
                     Row(
                       children: [
-                        Icon(eventsModel[i]['stars'] > 0? Icons.star : Icons.star_border_outlined, color: Colors.amber),
-                        Icon(eventsModel[i]['stars'] > 1? Icons.star : Icons.star_border_outlined, color: Colors.amber),
-                        Icon(eventsModel[i]['stars'] > 2? Icons.star : Icons.star_border_outlined, color: Colors.amber),
-                        Icon(eventsModel[i]['stars'] > 3?Icons.star : Icons.star_border_outlined, color: Colors.amber),
-                        Icon(eventsModel[i]['stars'] > 4? Icons.star : Icons.star_border_outlined, color: Colors.amber),
+                        Icon(event['stars'] > 0? Icons.star : Icons.star_border_outlined, color: Colors.amber),
+                        Icon(event['stars'] > 1? Icons.star : Icons.star_border_outlined, color: Colors.amber),
+                        Icon(event['stars'] > 2? Icons.star : Icons.star_border_outlined, color: Colors.amber),
+                        Icon(event['stars'] > 3?Icons.star : Icons.star_border_outlined, color: Colors.amber),
+                        Icon(event['stars'] > 4? Icons.star : Icons.star_border_outlined, color: Colors.amber),
                       ],
                     ),
                     //botoões compartilhar, favoritar
@@ -143,10 +238,10 @@ Widget ExplorarFragment(BuildContext context,Function refresh, mapController){
                               child: InkWell(
                                 splashColor: AppConfig.primaryColor,
                                 onTap: () {
-                                  eventsModel[i]['favorite'] = !eventsModel[i]['favorite'];
+                                  event['favorite'] = !event['favorite'];
                                   refresh();
                                 },
-                                child: Icon(eventsModel[i]['favorite']? Icons.favorite : Icons.favorite_border , color: AppConfig.primaryColor),
+                                child: Icon(event['favorite']? Icons.favorite : Icons.favorite_border , color: AppConfig.primaryColor),
                               ),
                             )
 
@@ -162,106 +257,6 @@ Widget ExplorarFragment(BuildContext context,Function refresh, mapController){
           ],
         ),
 
-    )
-    )
-  );
-
-  const custonLeftBorderRadius = BorderRadius.only(
-    topLeft: Radius.circular(50),
-    bottomLeft: Radius.circular(50),
-  );
-
-  const custonRightBorderRadius = BorderRadius.only(
-    topRight: Radius.circular(50),
-    bottomRight: Radius.circular(50),
-  );
-
-  return Expanded(
-    child: Stack(
-      children: [
-        GoogleMap( //Map widget from google_maps_flutter package
-          myLocationEnabled: true,
-          myLocationButtonEnabled: true,
-          zoomGesturesEnabled: true, //enable Zoom in, out on map
-          markers: markers, //markers to show on map
-          mapType: MapType.normal, //map type
-          initialCameraPosition: CameraPosition( //initial position in map
-            target: initialCameraPosition, //initial position
-            zoom: 10.0, //initial zoom level
-          ),
-          onMapCreated: (controller) { //method called when map is created
-            mapController = controller;
-            refresh();
-          },
-        ),
-        Column(
-          children: [
-            //distanciamento do topo
-            SizedBox(height: heightSize * .56),
-            //conteiners [ver lista, filtros]
-            Row(
-              children: [
-                //mini container ver lista
-                const SizedBox(width: 10),
-                Material(
-                  elevation: 0,
-                  color: Colors.white.withOpacity(0),
-                  child: InkWell(
-                    borderRadius: const BorderRadius.all(Radius.circular(5)),
-                    onTap: (){},
-                    child: Ink(
-                      height: 40, width: 110,
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(5),
-                        boxShadow: const [ BoxShadow(blurRadius: 0.5, color: Colors.black54, offset: Offset(.2,1)) ],
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: const [
-                          Text("Ver Lista"),
-                          Icon(Icons.list)
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-                //mini container filtros
-                const SizedBox(width: 10),
-                Container(
-                  height: 40, width: 110,
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(5),
-                    boxShadow: const [ BoxShadow(blurRadius: 0.5, color: Colors.black54, offset: Offset(.2,1)) ],
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: const [
-                      Text("Filtros"),
-                      Icon(Icons.tune)
-                    ],
-                  ),
-                ),
-              ],
-            ),
-            //lista de eventos
-            Container(
-                height: heightSize * .16,
-                child: ListView.builder(
-                  scrollDirection: Axis.horizontal,
-                  itemCount: eventsModel.length,
-                  itemBuilder: (context, i) => eventContainer[i],
-                )
-            ),
-            // SingleChildScrollView(
-            //   scrollDirection: Axis.horizontal,
-            //   child: Row(children: eventContainer),
-            // )
-          ],
-        )
-
-      ],
-    ),
+      )
   );
 }

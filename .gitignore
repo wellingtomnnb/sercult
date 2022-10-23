@@ -167,3 +167,7 @@ lint/tmp/
 /.dart_tool/flutter_build/c489252af1eb8793d1d726a230e14e7a/kernel_snapshot.d
 /.dart_tool/flutter_build/c489252af1eb8793d1d726a230e14e7a/kernel_snapshot.stamp
 /.dart_tool/flutter_build/c489252af1eb8793d1d726a230e14e7a/outputs.json
+
+
+/.flutter-plugins
+/.flutter-plugins-dependencies
