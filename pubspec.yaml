@@ -5,7 +5,7 @@ description: A Plataforma de Visibilidade para Todas Manifestações Culturais
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 
-version: 1.0.0+1
+version: 1.0.2
 
 environment:
   sdk: ">=2.16.2 <3.0.0"
@@ -15,6 +15,7 @@ dependencies:
     sdk: flutter
   cached_network_image: ^3.1.0 #pegar imagens da internet
   smooth_page_indicator: ^1.0.0+2
+  google_maps_flutter: ^2.0.4
 
   cupertino_icons: ^1.0.2
 
