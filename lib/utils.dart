@@ -6,6 +6,8 @@ class Utils{
       'label': '1,0 KM. Hoje. GRATIS',
       'time': '17:30',
       'location': 'Serra - Sede',
+      'lat': -20.1211968,
+      'lng': -40.4384825,
       'banner_url': urlImagesModel[0],
       'stars': 1,
       'favorite': false
@@ -15,6 +17,8 @@ class Utils{
       'label': '7,9 KM. Hoje. GRATIS',
       'time': '20:30',
       'location': 'Laranjeiras - ES',
+      'lat': -20.1967084,
+      'lng': -40.2915019,
       'banner_url': urlImagesModel[1],
       'stars': 3,
       'favorite': false
@@ -24,6 +28,8 @@ class Utils{
       'label': '200 M. Hoje. GRATIS',
       'time': '16:30',
       'location': 'Jacaraípe - ES',
+      'lat': -20.1371992,
+      'lng': -40.2307168,
       'banner_url': urlImagesModel[2],
       'stars': 5,
       'favorite': true

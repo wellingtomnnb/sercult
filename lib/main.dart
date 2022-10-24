@@ -45,7 +45,7 @@ class _HomeState extends State<Home> {
     // Screen Fragments
     List<Widget> _views = [
       HomeFragment(refresh, context),
-      ExplorarFragment(context, refresh, mapController),
+      const ExplorarFragment(),
       Container(
         child: Expanded(child: Container(
           padding: EdgeInsets.all(20),
@@ -61,8 +61,6 @@ class _HomeState extends State<Home> {
       const Center(child: Text('Content of Tab four')),
       const Center(child: Text('Content of Tab five')),
     ];
-
-    TabController tabController;
 
     return DefaultTabController(
       length: 5,
