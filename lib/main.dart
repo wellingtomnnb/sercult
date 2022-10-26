@@ -26,11 +26,11 @@ class _HomeState extends State<Home> {
   static const tabfontSize = 12.0;
   // Tabs Buttons
   final List<Tab> _tabs = const [
-    Tab(icon: Icon(Icons.home), child: Expanded(child: Text('Início', style: TextStyle(fontSize: tabfontSize)))),
-    Tab(icon: Icon(Icons.map), child: Expanded(child: Text('Explorar', style: TextStyle(fontSize: tabfontSize)))),
-    Tab(icon: Icon(Icons.favorite), child: Expanded(child: Text('Favoritos', style: TextStyle(fontSize: tabfontSize)))),
-    Tab(icon: Icon(Icons.notifications), child: Expanded(child: Text('Notificações', style: TextStyle(fontSize: tabfontSize))),),
-    Tab(icon: Icon(Icons.person), child: Expanded(child: Text('Perfil', style: TextStyle(fontSize: tabfontSize)))),
+    Tab(iconMargin: EdgeInsets.all(0), icon: Icon(Icons.home), child: Text('Início', style: TextStyle(fontSize: tabfontSize))),
+    Tab(iconMargin: EdgeInsets.all(0), icon: Icon(Icons.map), child: Text('Explorar', style: TextStyle(fontSize: tabfontSize))),
+    Tab(iconMargin: EdgeInsets.all(0), icon: Icon(Icons.favorite), child: Text('Favoritos', style: TextStyle(fontSize: tabfontSize))),
+    Tab(iconMargin: EdgeInsets.all(0), icon: Icon(Icons.notifications), child: Text('Notificações', style: TextStyle(fontSize: tabfontSize))),
+    Tab(iconMargin: EdgeInsets.all(0), icon: Icon(Icons.person), child: Text('Perfil', style: TextStyle(fontSize: tabfontSize))),
   ];
 
   //controller for Google map
@@ -78,6 +78,7 @@ class _HomeState extends State<Home> {
               boxShadow: [ BoxShadow(blurRadius: 1, color: Colors.black45, offset: Offset(0,-.01)) ],
             ),
             child: TabBar(
+                labelPadding: EdgeInsets.zero,
                 labelColor: AppConfig.primaryColor,
                 unselectedLabelColor: Colors.black54,
                 indicatorColor: AppConfig.primaryColor,

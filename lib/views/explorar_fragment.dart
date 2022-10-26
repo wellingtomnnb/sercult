@@ -1,7 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:sercult/main.dart';
 import 'package:sercult/utils.dart';
 
 import '../app_config.dart';
@@ -82,16 +81,6 @@ class _ExplorarFragmentState extends State<ExplorarFragment> {
           Column(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
-              SizedBox(
-                width: 50, height: 50,
-                child: Material(
-                    color: Colors.red,
-                    child: InkWell(
-                      onTap: () {
-                        _goToLocation();
-                      },
-                    )),
-              ),
               _rowBottons(),
               _cardsEvent(heightSize, eventsModel, eventsContainers)
             ],
@@ -101,44 +90,63 @@ class _ExplorarFragmentState extends State<ExplorarFragment> {
     );
   }
 
+  Widget _locationButton(){
+    return SizedBox(
+      width: 40, height: 40,
+      child: Material(
+          color: AppConfig.primaryColor,
+          borderRadius: BorderRadius.circular(20),
+          child: InkWell(
+            borderRadius: BorderRadius.circular(20),
+            onTap: () => _goToLocation(),
+            child: const Icon(Icons.my_location, color: Colors.white),
+          )),
+    );
+  }
   Widget _rowBottons(){
     //conteiners [ver lista, filtros]
     return Row(
-        children: List.generate(2, (i) => Padding(
-            padding: const EdgeInsets.only(left: 10),
-            child: Container(
-              height: 40, width: 110,
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(5),
-              ),
-              child: Material(
-                elevation: 2,
-                borderRadius: BorderRadius.circular(5),
-                child: InkWell(
-                  onTap: (){},
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      Text(i==0? "Ver Lista" : "Filtros"),
-                      Icon(i==0? Icons.list : Icons.tune)
-                    ],
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Row(
+            children: List.generate(2, (i) => Padding(
+                padding: const EdgeInsets.only(left: 10),
+                child: Container(
+                  height: 40, width: 110,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(5),
                   ),
-                ),
-              ),
-            )
-        ))
+                  child: Material(
+                    elevation: 2,
+                    borderRadius: BorderRadius.circular(5),
+                    child: InkWell(
+                      onTap: (){},
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          Text(i==0? "Ver Lista" : "Filtros"),
+                          Icon(i==0? Icons.list : Icons.tune)
+                        ],
+                      ),
+                    ),
+                  ),
+                )
+            ))
+        ),
+        Padding(
+          padding: const EdgeInsets.only(right: 10),
+          child: _locationButton()
+        )
+      ],
     );
   }
-
-  ScrollController _scrollController = ScrollController();
 
   Widget _cardsEvent(heightSize, eventsModel, eventContainer){
     //lista de eventos
     return SizedBox(
         height: heightSize * .18,
         child: ListView.builder(
-          controller: _scrollController,
           scrollDirection: Axis.horizontal,
           itemCount: eventsModel.length,
           itemBuilder: (context, i) => eventContainer[i],
