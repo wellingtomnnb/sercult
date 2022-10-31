@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:sercult/utils.dart';
 
@@ -16,7 +17,40 @@ class _ExplorarFragmentState extends State<ExplorarFragment> {
 
   GoogleMapController? mapController;
   LatLng initialCameraPosition = const LatLng(-20.1365756,-40.4441645);
+  Position? _currentPosition;
 
+  BitmapDescriptor sourceIcon = BitmapDescriptor.defaultMarker;
+  BitmapDescriptor destinationIcon = BitmapDescriptor.defaultMarker;
+  BitmapDescriptor currentLocationIcon = BitmapDescriptor.defaultMarker;
+  void setCustomMarkerIcon() {
+    BitmapDescriptor.fromAssetImage(
+        ImageConfiguration.empty, "images/logo.png")
+        .then(
+          (icon) {
+        sourceIcon = icon;
+      },
+    );
+    BitmapDescriptor.fromAssetImage(
+        ImageConfiguration.empty, "images/logo.png")
+        .then(
+          (icon) {
+        destinationIcon = icon;
+      },
+    );
+    BitmapDescriptor.fromAssetImage(
+        ImageConfiguration.empty, "images/logo.png")
+        .then(
+          (icon) {
+        currentLocationIcon = icon;
+      },
+    );
+  }
+
+  void initState() {
+    _getCurrentPosition();
+    setCustomMarkerIcon();
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     return Explorar(context);
@@ -27,6 +61,12 @@ class _ExplorarFragmentState extends State<ExplorarFragment> {
     final List<Map<String, dynamic>> eventsModel = Utils.eventsModel;
 
     Set<Marker> markers = {
+      Marker(
+        markerId: const MarkerId("currentLocation"),
+        icon: currentLocationIcon,
+        position: LatLng(
+            _currentPosition!.latitude, _currentPosition!.longitude),
+      ),
       Marker( //add marker on google map
         markerId: MarkerId(const LatLng(-20.1258915,-40.1985967).toString()),
         position: LatLng(eventsModel[0]['lat'], eventsModel[0]['lng']), //position of marker
@@ -65,8 +105,8 @@ class _ExplorarFragmentState extends State<ExplorarFragment> {
       child: Stack(
         children: [
           GoogleMap( //Map widget from google_maps_flutter package
-            myLocationEnabled: true,
-            myLocationButtonEnabled: true,
+            myLocationButtonEnabled: false,
+            trafficEnabled: true,
             zoomGesturesEnabled: true, //enable Zoom in, out on map
             markers: markers, //markers to show on map
             mapType: MapType.normal, //map type
@@ -98,11 +138,16 @@ class _ExplorarFragmentState extends State<ExplorarFragment> {
           borderRadius: BorderRadius.circular(20),
           child: InkWell(
             borderRadius: BorderRadius.circular(20),
-            onTap: () => _goToLocation(),
+            onTap: () {
+              _goToLocation(loc: LatLng(_currentPosition!.latitude, _currentPosition!.longitude));
+              _getCurrentPosition();
+              print('LAT: ${_currentPosition ?? ""}');
+            },
             child: const Icon(Icons.my_location, color: Colors.white),
           )),
     );
   }
+
   Widget _rowBottons(){
     //conteiners [ver lista, filtros]
     return Row(
@@ -292,8 +337,47 @@ class _ExplorarFragmentState extends State<ExplorarFragment> {
   void _goToLocation ({LatLng loc = const LatLng(-20.1365756,-40.4441645)}) {
     mapController!.animateCamera(CameraUpdate.newCameraPosition(CameraPosition(
       target: loc,
-      zoom: 20.0,
+      zoom: 17.0,
     )));
+  }
+
+  Future<void> _getCurrentPosition() async {
+    final hasPermission = await _handleLocationPermission();
+    if (!hasPermission) return;
+    await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high)
+        .then((Position position) {
+      setState(() => _currentPosition = position);
+    }).catchError((e) {
+      debugPrint(e);
+    });
+  }
+
+  Future<bool> _handleLocationPermission() async {
+    bool serviceEnabled;
+    LocationPermission permission;
+
+    serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) {
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content: Text('Location services are disabled. Please enable the services')));
+      return false;
+    }
+    permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.denied) {
+        ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('As permissões de localização foram negadas')));
+        return false;
+      }
+    }
+    if (permission == LocationPermission.deniedForever) {
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content: Text('As permissões de localização foram negadas permanentemente, não podemos solicitar novamente.')));
+      return false;
+    }
+    return true;
   }
 }
 
