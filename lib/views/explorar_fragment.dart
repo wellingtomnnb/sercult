@@ -38,7 +38,7 @@ class _ExplorarFragmentState extends State<ExplorarFragment> {
       },
     );
     BitmapDescriptor.fromAssetImage(
-        ImageConfiguration.empty, "images/logo.png")
+        ImageConfiguration.empty, "images/badge.png")
         .then(
           (icon) {
         currentLocationIcon = icon;
@@ -53,6 +53,9 @@ class _ExplorarFragmentState extends State<ExplorarFragment> {
   }
   @override
   Widget build(BuildContext context) {
+    _goToLocation(loc: LatLng(
+        _currentPosition?.latitude ?? -19.3720337, _currentPosition?.longitude ?? -44.396601
+    ));
     return Explorar(context);
   }
 
@@ -65,7 +68,7 @@ class _ExplorarFragmentState extends State<ExplorarFragment> {
         markerId: const MarkerId("currentLocation"),
         icon: currentLocationIcon,
         position: LatLng(
-            _currentPosition!.latitude, _currentPosition!.longitude),
+            _currentPosition?.latitude ?? -19.3720337, _currentPosition?.longitude ?? -44.396601),
       ),
       Marker( //add marker on google map
         markerId: MarkerId(const LatLng(-20.1258915,-40.1985967).toString()),
