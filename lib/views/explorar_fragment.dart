@@ -1,3 +1,6 @@
+import 'dart:convert';
+import 'dart:typed_data';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
@@ -16,34 +19,22 @@ class ExplorarFragment extends StatefulWidget {
 class _ExplorarFragmentState extends State<ExplorarFragment> {
 
   GoogleMapController? mapController;
-  LatLng initialCameraPosition = const LatLng(-20.1365756,-40.4441645);
+  LatLng initialCameraPosition = const LatLng(-19.3720337, -44.396601);
   Position? _currentPosition;
 
-  BitmapDescriptor sourceIcon = BitmapDescriptor.defaultMarker;
-  BitmapDescriptor destinationIcon = BitmapDescriptor.defaultMarker;
   BitmapDescriptor currentLocationIcon = BitmapDescriptor.defaultMarker;
   void setCustomMarkerIcon() {
     BitmapDescriptor.fromAssetImage(
-        ImageConfiguration.empty, "images/logo.png")
-        .then(
-          (icon) {
-        sourceIcon = icon;
-      },
-    );
-    BitmapDescriptor.fromAssetImage(
-        ImageConfiguration.empty, "images/logo.png")
-        .then(
-          (icon) {
-        destinationIcon = icon;
-      },
-    );
+        ImageConfiguration.empty, "images/badge.png")
+        .then((icon) => currentLocationIcon = icon);
+
     BitmapDescriptor.fromAssetImage(
         ImageConfiguration.empty, "images/badge.png")
-        .then(
-          (icon) {
-        currentLocationIcon = icon;
-      },
-    );
+        .then((icon) => currentLocationIcon = icon);
+
+    BitmapDescriptor.fromAssetImage(
+        ImageConfiguration.empty, "images/badge.png")
+          .then((icon) => currentLocationIcon = icon);
   }
 
   void initState() {
@@ -98,7 +89,6 @@ class _ExplorarFragmentState extends State<ExplorarFragment> {
         icon: BitmapDescriptor.defaultMarker, //Icon for Marker
       )
     };
-
 
     final double widthSize = MediaQuery.of(context).size.width;
     final double heightSize = MediaQuery.of(context).size.height;
@@ -338,10 +328,10 @@ class _ExplorarFragmentState extends State<ExplorarFragment> {
   }
 
   void _goToLocation ({LatLng loc = const LatLng(-20.1365756,-40.4441645)}) {
-    mapController!.animateCamera(CameraUpdate.newCameraPosition(CameraPosition(
-      target: loc,
-      zoom: 17.0,
-    )));
+    if (mapController != null) {
+      mapController!.animateCamera(CameraUpdate.newCameraPosition(
+          CameraPosition(target: loc, zoom: 15)));
+    }
   }
 
   Future<void> _getCurrentPosition() async {
